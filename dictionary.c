@@ -6,6 +6,7 @@ int initializeDataDictionary(const char "diccionaryName") {
     FILE *dictionary = fopen("diccionario.dat","w+");
     fwrite(&mainHeader,sizeof(mainHeader),1,dictionary);
     long currentDir = ftell(dictionary);
-    
+
+    return EXIT_SUCCESS;
     
 }
