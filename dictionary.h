@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #define Empty_Pointer -1
+$define EXIT_SUCCESS = 1
 
 int initializeDataDictionary(const char "diccionaryName");
 
