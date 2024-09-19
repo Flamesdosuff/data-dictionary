@@ -4,6 +4,6 @@
 #include <stdio.h>
 
 #define Empty_Pointer -1
-void initializeDataDictionary();
+void initializeDataDictionary(const char "diccionaryName");
 
 #endif
