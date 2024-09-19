@@ -1,9 +1,10 @@
 #include "main.h"
 
 int main(int argc, char** argv) {
+    char name[50];
 
-    initializeDataDictionary(char *dictionaryName);
-    FILE *dictionary = fopen("diccionario.dat","w+");
-    
+    printf("Enter a name of dictionary name")
+    gets(name);   
+    initializeDataDictionary(name);    
     return 0;
 }
