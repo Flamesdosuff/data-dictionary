@@ -6,6 +6,6 @@
 
 #define Empty_Pointer -1
 
-bool initializeDataDictionary(const char "diccionaryName");
+int initializeDataDictionary(const char "diccionaryName");
 
 #endif
