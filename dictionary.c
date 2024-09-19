@@ -1,6 +1,6 @@
 #include "dictionary.h"
 
-void initializeDataDictionary(const char "diccionaryName") {
+int initializeDataDictionary(const char "diccionaryName") {
     long mainHeader = Empty_Pointer;
     printf("Initializing Data Dictionary...\n");
     FILE *dictionary = fopen("diccionario.dat","w+");
