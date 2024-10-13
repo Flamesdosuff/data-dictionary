@@ -3,10 +3,18 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
-#define Empty_Pointer -1
-$define EXIT_SUCCESS = 1
+typedef struct Node {
+    char value[50];      
+    struct Node *sig;  
+} Node;
 
-int initializeDataDictionary(const char "diccionaryName");
+#define Empty_Pointer NULL  
+#define MAX_LINE_LENGTH 100 
+
+int initializeDataDictionary(const char* dictionaryName);
 
 #endif
+
+
