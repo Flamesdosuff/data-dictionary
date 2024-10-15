@@ -1,6 +1,5 @@
 #include "dictionary.h"
 
-// Función para imprimir los nodos de la lista
 void printNodes(Node *head) {
     Node *corre = head;
     int cont = 1; 
@@ -12,8 +11,8 @@ void printNodes(Node *head) {
 }
 
 int initializeDataDictionary(const char* dictionaryName) {
-    Node *cab = NULL; // Variable para la cabeza de la lista
-    Node *fin = NULL; // Variable para el último nodo
+    Node *cab = NULL; 
+    Node *fin = NULL; 
     printf("Initializing Data Dictionary...\n");
     FILE *file = fopen(dictionaryName, "r");
     if (!file) {
