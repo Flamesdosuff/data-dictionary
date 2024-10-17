@@ -14,6 +14,9 @@ int main(int argc, char** argv) {
     }
     initializeDataDictionary(name);
 
+    return 0;
+}
+    // recuerda que el main tiene que quedar lo mas corto posible
     /*funciones que hay que implementear al proyecto para perfeccionar el git
     
     void appendNode(Node **head, const char *line)
@@ -32,8 +35,6 @@ int main(int argc, char** argv) {
 
     */
 
-    return 0;
-}
 
 
 
