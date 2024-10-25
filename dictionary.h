@@ -15,8 +15,7 @@ typedef struct Node {
 #define Empty_Pointer NULL  
 #define MAX_LINE_LENGTH 100 
 
-//funciones a utilizar en el programa 
-// ademas el ID es el S y el Prod es todo el argumento
+
 
 
 int initializeDataDictionary(const char* dictionaryName);
