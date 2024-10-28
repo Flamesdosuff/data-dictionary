@@ -20,8 +20,8 @@ void processNodes(Node *head) {
             strncpy(current->Produccion, delimiter + 2, sizeof(current->Produccion) - 1);
             current->Produccion[sizeof(current->Produccion) - 1] = '\0'; 
         } else {
-            strcpy(current->ID, "N/A");
-            strcpy(current->Produccion, "N/A");
+            strcpy(current->ID, "NULL");
+            strcpy(current->Produccion, "NULL");
         }
         printf("Nodo procesado: ID = %s, Producción = %s\n", current->ID, current->Produccion);
         current = current->sig;
