@@ -1,11 +1,13 @@
 #include "dictionary.h"
+#define MAX_PRODUCCION_LENGTH 100
 
 void printNodes(Node *head) {
     Node *corre = head;
-    int cont = 1; 
+    int cont = 1;
     printf("Comprobación de que se hayan guardado los nodos. A continuación los nodos guardados:\n");
+    
     while (corre != NULL) {
-        printf("Nodo #%d: ID = %s, Producción = %s\n", cont++, corre->ID, corre->Produccion);
+        printf("%d: ID = %s , Producción = %s\n", cont++, corre->ID, corre->Produccion);
         corre = corre->sig; 
     }
 }
@@ -28,6 +30,51 @@ void processNodes(Node *head) {
     }
 }
 
+/*void 1PrintconsolidateNodes(Node *head) {
+    Node *corre = head, *ori = head; 
+    while (ori != NULL&&corre !=NULL) {
+        char concatenado[100];
+        corre = ori->sig;
+        strcpy(concatenado, ori->Produccion);
+        strcat(concatenado, "|");  
+
+        while (corre->ID == ori->ID) {
+            strcat(concatenado, corre->Produccion);
+            strcat(concatenado, "|");             
+            corre = corre->sig;                
+        }
+        strcpy(ori->Produccion, concatenado);    
+        printf("ID: %s - Producción Consolidada: %s\n", ori->ID, ori->Produccion); 
+        ori = corre;  
+    }
+}
+*/
+
+void PrintconsolidateNodes(Node *head) {
+    Node *corre = head, *ori = head;
+
+    while (ori != NULL) {
+        printf("%s -> ", ori->ID); 
+        corre = ori;  
+        
+        int firstProduction = 1;  // Flag para controlar el primer elemento
+        while (corre != NULL && strcmp(corre->ID, ori->ID) == 0) {
+            // Imprimir Produccion uno por uno
+            char *produccion = corre->Produccion;
+            for (int i = 0; produccion[i] != '\0' && produccion[i] != '\r'; i++) {
+                if (produccion[i] == '\n') {
+                    break;  
+                }
+                putchar(produccion[i]);  
+            }
+            printf(" | "); 
+            corre = corre->sig;  
+        }
+        printf("\n\n");  
+        ori = corre;
+    }
+}
+
 
 int initializeDataDictionary(const char* dictionaryName) {
     Node *cab = NULL; 
@@ -41,8 +88,7 @@ int initializeDataDictionary(const char* dictionaryName) {
     }
 
     char line[MAX_LINE_LENGTH];  
-    while (fgets(line, sizeof(line), file)) {
-        line[strcspn(line, "\n")] = '\0';    
+    while (fgets(line, sizeof(line), file)) {    
         Node *aux = malloc(sizeof(Node));  
         if (aux == NULL) {
             printf("Error allocating memory for node\n");
@@ -64,6 +110,7 @@ int initializeDataDictionary(const char* dictionaryName) {
 
     fclose(file); 
     processNodes(cab);      
-    printNodes(cab);            
+    printNodes(cab);     
+    PrintconsolidateNodes(cab);      
     return 1;
 }

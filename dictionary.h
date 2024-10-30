@@ -8,7 +8,7 @@
 typedef struct Node {
     char Linea[50];
     char ID[5];           // El ID (primera letra)
-    char Produccion[100]; // El argumento de la expresión
+    char Produccion[3]; // El argumento de la expresión
     struct Node *sig;  
 } Node;
 
