@@ -50,30 +50,33 @@ void processNodes(Node *head) {
 }
 */
 
+
 void PrintconsolidateNodes(Node *head) {
     Node *corre = head, *ori = head;
-
     while (ori != NULL) {
         printf("%s -> ", ori->ID); 
         corre = ori;  
-        
-        int firstProduction = 1;  // Flag para controlar el primer elemento
+        int firstProduction = 1;  
         while (corre != NULL && strcmp(corre->ID, ori->ID) == 0) {
-            // Imprimir Produccion uno por uno
             char *produccion = corre->Produccion;
+            if (!firstProduction) {
+                printf(" | "); 
+            } else {
+                firstProduction = 0;
+            }
             for (int i = 0; produccion[i] != '\0' && produccion[i] != '\r'; i++) {
                 if (produccion[i] == '\n') {
                     break;  
                 }
                 putchar(produccion[i]);  
             }
-            printf(" | "); 
             corre = corre->sig;  
         }
-        printf("\n\n");  
+        printf("\n");  
         ori = corre;
     }
 }
+
 
 
 int initializeDataDictionary(const char* dictionaryName) {
