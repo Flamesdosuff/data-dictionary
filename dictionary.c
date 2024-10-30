@@ -30,25 +30,7 @@ void processNodes(Node *head) {
     }
 }
 
-/*void 1PrintconsolidateNodes(Node *head) {
-    Node *corre = head, *ori = head; 
-    while (ori != NULL&&corre !=NULL) {
-        char concatenado[100];
-        corre = ori->sig;
-        strcpy(concatenado, ori->Produccion);
-        strcat(concatenado, "|");  
 
-        while (corre->ID == ori->ID) {
-            strcat(concatenado, corre->Produccion);
-            strcat(concatenado, "|");             
-            corre = corre->sig;                
-        }
-        strcpy(ori->Produccion, concatenado);    
-        printf("ID: %s - Producción Consolidada: %s\n", ori->ID, ori->Produccion); 
-        ori = corre;  
-    }
-}
-*/
 
 
 void PrintconsolidateNodes(Node *head) {
@@ -76,6 +58,113 @@ void PrintconsolidateNodes(Node *head) {
         ori = corre;
     }
 }
+
+/*void PrintCicloNodes(Node *head) {
+    Node *corre = head, *ori = head;
+
+    while (ori != NULL) {
+        printf("%s -> ", ori->ID);
+        corre = ori;
+        int firstProduction = 1;
+
+        while (corre != NULL && strcmp(corre->ID, ori->ID) == 0) {
+            char *produccion = corre->Produccion;
+            int tieneID = 0;
+
+            // Primer recorrido: buscar si hay coincidencia con el ID y, si hay, imprimir en llaves
+            for (int i = 0; produccion[i] != '\0' && produccion[i] != '\r'; i++) {
+                if (produccion[i] == ori->ID[0]) {
+                    tieneID = 1;
+                    if (!firstProduction) {
+                        printf(" | ");
+                    } else {
+                        firstProduction = 0;
+                    }
+                    // Imprime con llaves la parte de la producción antes del ID
+                    printf("{");
+                    for (int j = 0; j < i; j++) {
+                        putchar(produccion[j]);
+                    }
+                    printf("}");
+                    break;
+                }
+            }
+
+            // Segundo recorrido: imprime el resto normalmente si no contiene el ID
+            if (!tieneID) {
+                if (!firstProduction) {
+                    printf(" | ");
+                } else {
+                    firstProduction = 0;
+                }
+                for (int i = 0; produccion[i] != '\0' && produccion[i] != '\r'; i++) {
+                    putchar(produccion[i]);
+                }
+            } else {
+                // Si ya imprimimos una parte entre llaves, imprime el resto de la producción después del ID
+                for (int i = tieneID; produccion[i] != '\0' && produccion[i] != '\r'; i++) {
+                    putchar(produccion[i]);
+                }
+            }
+            corre = corre->sig;
+        }
+        printf("\n");
+        ori = corre;
+    }
+}
+*/
+void PrintCicloNodes(Node *head) {
+    Node *corre = head, *ori = head;
+
+    while (ori != NULL) {
+        printf("%s -> ", ori->ID);
+        corre = ori;
+        int firstProduction = 1;
+
+        while (corre != NULL && strcmp(corre->ID, ori->ID) == 0) {
+            char *produccion = corre->Produccion;
+            int tieneID = 0;
+
+            // Primer recorrido: buscar si hay coincidencia con el ID y, si hay, imprimir en llaves
+            for (int i = 0; produccion[i] != '\0' && produccion[i] != '\r'; i++) {
+                if (produccion[i] == ori->ID[0]) {
+                    tieneID = 1;
+                    if (!firstProduction) {
+                        printf(" | ");
+                    } else {
+                        firstProduction = 0;
+                    }
+                    // Imprime con llaves la parte de la producción antes del ID
+                    printf("{");
+                    for (int j = 0; j < i; j++) {
+                        putchar(produccion[j]);
+                    }
+                    printf("}");
+                    break;
+                }
+            }
+            if (!tieneID) {
+                if (!firstProduction) {
+                    printf(" | ");
+                } else {
+                    firstProduction = 0;
+                }
+                for (int i = 0; produccion[i] != '\0' && produccion[i] != '\r'; i++) {
+                    putchar(produccion[i]);
+                }
+            } else {
+
+                for (int i = tieneID+1; produccion[i] != '\0' && produccion[i] != '\r'; i++) {
+                    putchar(produccion[i]);
+                }
+            }
+            corre = corre->sig;
+        }
+        printf("\n");
+        ori = corre;
+    }
+}
+
 
 
 
@@ -114,6 +203,7 @@ int initializeDataDictionary(const char* dictionaryName) {
     fclose(file); 
     processNodes(cab);      
     printNodes(cab);     
-    PrintconsolidateNodes(cab);      
+    PrintconsolidateNodes(cab); 
+    PrintCicloNodes(cab);     
     return 1;
 }
