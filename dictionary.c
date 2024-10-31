@@ -117,11 +117,7 @@ int checaRecursividad(Node *head, char *id, char *cadena) {
         }
 
         corre = corre->sig; // Avanza al siguiente nodo
-    }
-
-    printf("\n");
-
-  
+    }  
     if (head != NULL) { 
         GuardarStrings(head->ID, buffer);
         GuardarStrings(id, cadena);
@@ -199,7 +195,7 @@ void PrintCicloabajoarriba(Node *head) {
 
 void MostrarBuffers() {
     for (int i = 0; i < bufferCount; i++) {
-        printf("ID: %s -> Buffer: %s\n", bufferRecords[i].ID, bufferRecords[i].buffer);
+        printf("%s -> %s\n", bufferRecords[i].ID, bufferRecords[i].buffer);
     }
 }
 
@@ -262,7 +258,6 @@ void PrintCicloNodes(Node *head) {
 
         printf("\n");
         if (tieneID) {
-            printf("entra");
             int cont = checaRecursividad(corre, ori->ID, buffer);
             while (corre != NULL && strcmp(corre->ID, corre->ID) == 0) {
                 corre = corre->sig;
@@ -309,16 +304,16 @@ int initializeDataDictionary(const char* dictionaryName) {
     }
 
     fclose(file); 
-    processNodes(cab);      
-    printNodes(cab);     
-    PrintconsolidateNodes(cab); 
-    PrintCicloNodes(cab);  
-    
-        printf("\n");
+    processNodes(cab); 
+        printf("LECTURA DE ARCHIVO");     
+    printNodes(cab); 
+        printf("COCATENADO\n");    
+    PrintconsolidateNodes(cab);  
+        printf("ARRIBA PARA AVAJO\n");
 
-    MostrarBuffers(); 
+          PrintCicloNodes(cab);  
 
-        printf("\n");
+        printf("ABAJO PARA ARRIBA\n");
 
     PrintCicloabajoarriba(cab);  
     MostrarBuffers();
