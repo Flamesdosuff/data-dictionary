@@ -9,7 +9,8 @@
     "functional": "c",
     "tuple": "c",
     "type_traits": "c",
-    "utility": "c"
+    "utility": "c",
+    "dictionary.h": "c"
   },
   "C_Cpp.errorSquiggles": "disabled",
   "C_Cpp_Runner.cCompilerPath": "gcc",

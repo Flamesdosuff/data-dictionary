@@ -1,7 +1,8 @@
 #include "dictionary.h"
 #define MAX_PRODUCCION_LENGTH 500
 #define MAX_RECORDS 50
-
+BufferRecord bufferRecords[MAX_BUFFERS];  
+int bufferCount = 0;  
 
 void printNodes(Node *head) {
     Node *corre = head;
@@ -13,7 +14,6 @@ void printNodes(Node *head) {
         corre = corre->sig; 
     }
 }
-BufferRecord bufferRecords[MAX_RECORDS];
 int recordCount = 0; 
 
 void processNodes(Node *head) {
@@ -63,44 +63,145 @@ void PrintconsolidateNodes(Node *head) {
     }
 }
 
-/*
-*/
-int checaRecursividad(Node *head, char *id, char *cadena) {
-    Node *corre = head; 
-    int cont = 0;  
-    printf("\n"); 
-
-    if (corre == NULL) {
-        return cont;
+void GuardarStrings(char *ID, char *buffer) {
+        if (ID == NULL || buffer == NULL) {
+        printf("Error: ID o buffer son nulos\n");
+        return;
     }
-    printf("%s -> ", corre->ID);
-    int firstProduction = 1;
-    while (corre != NULL) {
-        int foundID = 0; 
-        if (!firstProduction) {
-            printf(" | ");
-        } else {
-        firstProduction = 0;
-        }
-        for (int j = 0; corre->Produccion[j] != '\0' && corre->Produccion[j] != '\r'; j++) {
-            if (corre->Produccion[j] == id[0]) {
-                foundID = 10; 
-                cont= 10; 
-                printf(" %s", cadena); 
-            }
-            if (!foundID) {
-                putchar(corre->Produccion[j]);
-               }
-        }
-        corre = corre->sig; 
+    if (bufferCount < MAX_BUFFERS) {  // Verifica que hay espacio para un nuevo buffer
+        strncpy(bufferRecords[bufferCount].ID, ID, sizeof(bufferRecords[bufferCount].ID) - 1);
+        bufferRecords[bufferCount].ID[sizeof(bufferRecords[bufferCount].ID) - 1] = '\0'; // Para evitar overflow
+        strncpy(bufferRecords[bufferCount].buffer, buffer, BUFFER_SIZE - 1);
+        bufferRecords[bufferCount].buffer[BUFFER_SIZE - 1] = '\0';
+        bufferCount++;
+    } else {
+        printf("No hay espacio para almacenar más buffers.\n");
     }
-
-    printf("\n"); 
-    return cont; 
 }
 
 
+int checaRecursividad(Node *head, char *id, char *cadena) {
+    Node *corre = head;
+    int cont = 0;
+    char buffer[BUFFER_SIZE] = ""; 
+    printf("\n");
 
+    if (corre == NULL) {
+        return cont; // Retorna 0 si la lista está vacía
+    }
+
+    printf("%s -> ", corre->ID);
+    int firstProduction = 1;
+
+    while (corre != NULL) {
+        int foundID = 0;
+
+        if (!firstProduction) {
+            printf(" | ");
+            strcat(buffer, " | "); 
+        } else {
+            firstProduction = 0;
+        }
+
+        for (int j = 0; corre->Produccion[j] != '\0' && corre->Produccion[j] != '\r'; j++) {
+            if (corre->Produccion[j] == id[0]) {
+                foundID = 10; 
+                cont = 10;
+                printf(" %s", cadena);
+                strcat(buffer, cadena); 
+            }
+            if (!foundID) {
+                putchar(corre->Produccion[j]);
+                strncat(buffer, &corre->Produccion[j], 1); 
+            }
+        }
+
+        corre = corre->sig; // Avanza al siguiente nodo
+    }
+
+    printf("\n");
+
+  
+    if (head != NULL) { 
+        GuardarStrings(head->ID, buffer);
+        GuardarStrings(id, cadena);
+    }
+
+    return cont;
+}
+
+
+void PrintCicloabajoarriba(Node *head) {
+    Node *corre = head;
+    int count = 0; 
+    while (corre != NULL) {
+        corre = corre->sig;
+        count++;
+    }
+    if (count < 2) {
+        printf("No hay suficientes nodos para realizar la operación.\n");
+        return;
+    }
+    corre = head;
+    Node *nodos[count]; 
+    int index = 0;
+
+    while (corre != NULL) {
+        nodos[index++] = corre;
+        corre = corre->sig; 
+    }
+
+    for (int i = count - 1; i >= 0; i--) { 
+        Node *currentNode = nodos[i];
+        char buffer[BUFFER_SIZE] = ""; 
+        int firstProduction = 1; 
+        int idFound = 0; 
+
+        for (int k = 0; k < bufferCount; k++) {
+            if (strcmp(bufferRecords[k].ID, currentNode->ID) == 0) {
+                idFound = 1; 
+                break; 
+            }
+        }
+        if (!idFound) {
+            for (int j = 0; currentNode->Produccion[j] != '\0' && currentNode->Produccion[j] != '\r'; j++) {
+                char currentChar = currentNode->Produccion[j]; 
+
+                int isID = 0;
+
+                for (int k = 0; k < bufferCount; k++) {
+                    if (bufferRecords[k].ID[0] == currentChar) {
+                        isID = 1; 
+                        if (!firstProduction) {
+                            strcat(buffer, " | "); 
+                        } else {
+                            firstProduction = 0;
+                        }
+                        strcat(buffer, "{"); 
+                        strcat(buffer, bufferRecords[k].buffer); 
+                        strcat(buffer, "}"); 
+                        break; 
+                    }
+                }
+                if (!isID) {
+                    if (!firstProduction) {
+                        strcat(buffer, " | "); 
+                    } else {
+                        firstProduction = 0; 
+                    }
+                    strncat(buffer, &currentChar, 1); 
+                }
+            }
+            GuardarStrings(currentNode->ID, buffer);
+        }
+    }
+}
+
+void MostrarBuffers() {
+    for (int i = 0; i < bufferCount; i++) {
+        printf("ID: %s -> Buffer: %s\n", bufferRecords[i].ID, bufferRecords[i].buffer);
+    }
+}
 
 
 
@@ -113,8 +214,10 @@ void PrintCicloNodes(Node *head) {
         corre = ori;
         int firstProduction = 1;
         int tieneID = 0;
+
         while (corre != NULL && strcmp(corre->ID, ori->ID) == 0) {
             char *produccion = corre->Produccion;
+
             for (int i = 0; produccion[i] != '\0' && produccion[i] != '\r'; i++) {
                 if (produccion[i] == ori->ID[0]) {
                     tieneID = 1;
@@ -124,8 +227,6 @@ void PrintCicloNodes(Node *head) {
                     } else {
                         firstProduction = 0;
                     }
-
-                    // Imprime con llaves la parte de la producción antes del ID
                     printf("{");
                     strcat(buffer, "{");
                     for (int j = 0; j < i; j++) {
@@ -158,18 +259,20 @@ void PrintCicloNodes(Node *head) {
 
             corre = corre->sig;
         }
+
         printf("\n");
-        if (tieneID)
-        {
+        if (tieneID) {
             printf("entra");
-            int cont = checaRecursividad(corre,ori->ID,buffer);
+            int cont = checaRecursividad(corre, ori->ID, buffer);
             while (corre != NULL && strcmp(corre->ID, corre->ID) == 0) {
                 corre = corre->sig;
-                }
+            }
         }
+
         ori = corre;
     }
 }
+
 
 
 
@@ -209,6 +312,15 @@ int initializeDataDictionary(const char* dictionaryName) {
     processNodes(cab);      
     printNodes(cab);     
     PrintconsolidateNodes(cab); 
-    PrintCicloNodes(cab);     
+    PrintCicloNodes(cab);  
+    
+        printf("\n");
+
+    MostrarBuffers(); 
+
+        printf("\n");
+
+    PrintCicloabajoarriba(cab);  
+    MostrarBuffers();
     return 1;
 }

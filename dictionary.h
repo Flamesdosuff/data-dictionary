@@ -10,7 +10,7 @@
 #define Empty_Pointer NULL  
 #define MAX_LINE_LENGTH 100 
 #define BUFFER_SIZE 50
-
+#define MAX_BUFFERS 100
 typedef struct Node {
     char Linea[50];
     char ID[5];           // El ID (primera letra)
